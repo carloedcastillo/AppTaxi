@@ -12,11 +12,13 @@
         android:layout_height="120dp"
         android:text="LLamar un Taxi"
         android:id="@+id/button"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
 
         android:background="@drawable/mybutton"
-        android:textSize="35dp" />
+        android:textSize="35dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="llamaruntaxi"
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,10 +26,11 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/textView"
-        android:textSize="50dp"
-        android:layout_marginTop="52dp"
         android:layout_below="@+id/button"
-        android:layout_centerHorizontal="true"
-        android:visibility="invisible" />
+        android:layout_marginTop="70dp"
+        android:layout_alignRight="@+id/button"
+        android:layout_alignEnd="@+id/button"
+        android:layout_alignLeft="@+id/button"
+        android:layout_alignStart="@+id/button" />
 
 </RelativeLayout>
