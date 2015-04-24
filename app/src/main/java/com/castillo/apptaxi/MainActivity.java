@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -148,11 +149,20 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void llamaruntaxi(View v){
-       //
+        comenzarLocalizacion();
         this.context = getApplicationContext();
         VolleySingleton vs = VolleySingleton.getInstance();
-        vs.getRequestQueue().add(jorsolicitartaxi());
-        comenzarLocalizacion();
+        if (!Latitud.isEmpty()&&!Longitud.isEmpty()){
+            vs.getRequestQueue().add(jorsolicitartaxi());
+
+            Toast toast = Toast.makeText(context, "Solicitud Enviada",Toast.LENGTH_LONG);
+            toast.show();
+        }else
+        {
+            Toast toast = Toast.makeText(context, "Habilite el GPS de su Dispositivo",Toast.LENGTH_LONG);
+            toast.show();
+        }
+
 
     }
 
