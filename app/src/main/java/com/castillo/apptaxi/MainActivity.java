@@ -23,12 +23,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.TimeUnit;
+
 
 public class MainActivity extends ActionBarActivity {
     public static Context context;
 
     String Latitud ="";
     String Longitud = "";
+    String idCarrera="";
+    String NoTaxi="";
 
 
 
@@ -78,8 +82,35 @@ public class MainActivity extends ActionBarActivity {
                 Request.Method.GET,url,null,new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                     idCarrera = response.optString("IdCarrera");
+                   // ((TextView)findViewById(R.id.textView)).setText(jobid);
 
 
+            }
+        },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }
+
+        );
+        return jor;
+
+    }
+
+    public JsonObjectRequest jorsolicitarnotaxi (){
+        String url = "http://getataxi.webege.com/carreras_notaxi.php?idCarrera="+idCarrera;
+        JsonObjectRequest jor = new JsonObjectRequest(
+                Request.Method.GET,url,null,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                NoTaxi = response.optString("NoTaxi");
+                if (!NoTaxi.equals("0")) {
+                    ((TextView) findViewById(R.id.textView)).setText(NoTaxi);
+                }else {
+                    NoTaxi="";
+                }
             }
         },new Response.ErrorListener() {
             @Override
@@ -153,18 +184,45 @@ public class MainActivity extends ActionBarActivity {
         this.context = getApplicationContext();
         VolleySingleton vs = VolleySingleton.getInstance();
         if (!Latitud.isEmpty()&&!Longitud.isEmpty()){
-            vs.getRequestQueue().add(jorsolicitartaxi());
+            if(idCarrera.isEmpty()){
+                vs.getRequestQueue().add(jorsolicitartaxi());
+                Toast toast = Toast.makeText(context, "Solicitud Enviada",Toast.LENGTH_SHORT);
+                toast.show();
+                solicitudTaxi();
+            }else {
+                solicitudTaxi();
+                Toast toast = Toast.makeText(context, "Esperando Respuesta",Toast.LENGTH_SHORT);
+                toast.show();
 
-            Toast toast = Toast.makeText(context, "Solicitud Enviada",Toast.LENGTH_LONG);
-            toast.show();
+            }
         }else
         {
-            Toast toast = Toast.makeText(context, "Habilite el GPS de su Dispositivo",Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(context, "Habilite el GPS de su Dispositivo",Toast.LENGTH_SHORT);
             toast.show();
         }
 
 
     }
+
+    public void solicitudTaxi(){
+        this.context = getApplicationContext();
+        VolleySingleton vs = VolleySingleton.getInstance();
+        vs.getRequestQueue().add(jorsolicitarnotaxi());
+        /*while (NoTaxi.isEmpty()) {
+            try {
+                Thread.sleep(20000);
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            vs.getRequestQueue().add(jorsolicitarnotaxi());
+        }*/
+
+
+    }
+
+
+
+
 
 
 
